@@ -49,19 +49,6 @@ class main_controller
 
         $editPermission = $this->hasEditPermission($saved_groups);
 
-        echo "DEBUG: NODURI: ";
-        print_r($nodes);
-        echo "<br>DEBUG: Grupuri cu acces: ";
-        print_r($saved_groups);
-        echo "<br>DEBUG: Grupuri utilizator: ";
-        print_r($this->get_user_groups());
-        echo "<br>DEBUG: Permisiune editare: ";
-        if ($editPermission) {
-            echo "Utilizatorul are acces la organigrama.";
-        } else {
-            echo "Acces interzis.";
-        }
-
         add_form_key('form');
 
         $this->template->assign_vars([

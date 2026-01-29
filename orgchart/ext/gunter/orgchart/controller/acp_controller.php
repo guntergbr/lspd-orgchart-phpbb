@@ -67,15 +67,15 @@ class acp_controller
      */
     public function display_options()
     {
-        // Încarcă fișierele de limbă
+        // Load language file
         $this->language->add_lang('common', 'gunter/orgchart');
 
-        // Crează form key pentru prevenirea CSRF
+        // Create form key to prevent CSRF
         add_form_key('gunter_orgchart_acp');
 
         $errors = [];
 
-        // Preluăm grupurile din baza de date
+        // Get groups from database
         $sql = 'SELECT group_id, group_name FROM ' . GROUPS_TABLE . ' ORDER BY group_name ASC';
         $result = $this->db->sql_query($sql);
 
@@ -88,22 +88,21 @@ class acp_controller
         }
         $this->db->sql_freeresult($result);
 
-        // Preluăm grupurile salvate anterior
+        // Get previously saved groups
         $saved_groups = isset($this->config['gunter_orgchart_groups']) ? @unserialize($this->config['gunter_orgchart_groups']) : [];
         if (!is_array($saved_groups)) {
             $saved_groups = [];
         }
 
-        // Dacă s-a trimis formularul
+        // Check if the form was submitted
         if ($this->request->is_set_post('submit')) {
-            // Verificăm form key
+            // Check form key
             if (!check_form_key('gunter_orgchart_acp')) {
                 $errors[] = $this->language->lang('FORM_INVALID');
             }
 
             if (empty($errors)) {
-
-                // Salvăm grupurile selectate (forțăm integer și serializare)
+                // Save the selected groups (force integer and serialize)
                 $selected_groups = array_map(
                     'intval',
                     $this->request->variable('gunter_orgchart_groups', [0 => 0])
@@ -111,18 +110,18 @@ class acp_controller
 
                 $this->config->set('gunter_orgchart_groups', serialize($selected_groups));
 
-                // Log debug sigur
-                $this->log->add('admin', 0, '', 'DEBUG: Grupuri salvate ACP: ' . implode(',', $selected_groups));
+                // Log debug info
+                $this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'DEBUG: Saved ACP groups: ' . implode(',', $selected_groups));
 
-                // Logăm acțiunea admin
+                // Log admin action
                 $this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_ORGCHART_SETTINGS');
 
-                // Confirmare salvare și redirect
+                // Confirm save and redirect
                 trigger_error($this->language->lang('ACP_ORGCHART_SETTING_SAVED') . adm_back_link($this->u_action));
             }
         }
 
-        // Trimitem variabile către template
+        // Send variables to template
         $this->template->assign_vars([
             'S_ERROR' => !empty($errors),
             'ERROR_MSG' => !empty($errors) ? implode('<br>', $errors) : '',
