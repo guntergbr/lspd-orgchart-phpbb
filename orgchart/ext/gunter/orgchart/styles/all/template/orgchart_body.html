@@ -1,7 +1,5 @@
 {% include 'overall_header.html' %}
 
-<h2>{{ ORGCHART_MESSAGE }}</h2>
-
 <div class="page-box">
 
   <div class="orgchart-wrapper" id="orgchartWrapper">
@@ -401,12 +399,7 @@
     if (imgEditBtn) imgEditBtn.onclick = e => { e.stopPropagation(); openImgModal(node.id); };
 
     const imgDelBtn = el.querySelector(".img-del");
-    if (imgDelBtn) imgDelBtn.onclick = e => {
-      e.stopPropagation();
-      const n = nodes.find(x => x.id === node.id);
-      n.pictureImg = ASSET_PATH + "avatar_placeholder.png";
-      renderOrgChart();
-    };
+    if (imgDelBtn) imgDelBtn.onclick = async e => { e.stopPropagation(); deleteAvatar(node.id); };
 
     node.el = el;
     return el;
@@ -510,6 +503,27 @@
     });
 
     nodes = nodes.filter(n => !del.has(n.id));
+    renderOrgChart();
+  }
+
+  async function deleteAvatar(id) {
+    if (!confirm("Delete avatar?")) return;
+
+    const n = nodes.find(x => x.id === id);
+    if (!n) return;
+
+    // ștergem din DB
+    n.pictureImg = "";
+
+    await fetch(API_EDIT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(n)
+    });
+
+    // placeholder doar pentru UI
+    n.pictureImg = ASSET_PATH + "avatar_placeholder.png";
+
     renderOrgChart();
   }
 

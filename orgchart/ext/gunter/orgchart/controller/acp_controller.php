@@ -102,8 +102,6 @@ class acp_controller
             }
 
             if (empty($errors)) {
-                // Salvăm checkbox-ul Goodbye
-                $this->config->set('gunter_orgchart_goodbye', $this->request->variable('gunter_orgchart_goodbye', 0));
 
                 // Salvăm grupurile selectate (forțăm integer și serializare)
                 $selected_groups = array_map(
@@ -129,7 +127,6 @@ class acp_controller
             'S_ERROR' => !empty($errors),
             'ERROR_MSG' => !empty($errors) ? implode('<br>', $errors) : '',
             'U_ACTION' => $this->u_action,
-            'GUNTER_ORGCHART_GOODBYE' => (bool) $this->config['gunter_orgchart_goodbye'],
             'GROUPS' => $groups,
             'SELECTED_GROUPS' => $saved_groups,
         ]);

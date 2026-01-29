@@ -14,15 +14,6 @@
     <fieldset>
         <legend>{{ lang('SETTINGS') }}</legend>
 
-        <!-- Checkbox Goodbye -->
-        <dl>
-            <dt><label for="gunter_orgchart_goodbye">{{ lang('ACP_ORGCHART_GOODBYE') ~ lang('COLON') }}</label></dt>
-            <dd>
-                <label><input type="radio" class="radio" name="gunter_orgchart_goodbye" value="1"{% if GUNTER_ORGCHART_GOODBYE %} checked="checked"{% endif %}> {{ lang('YES') }}</label>
-                <label><input type="radio" class="radio" name="gunter_orgchart_goodbye" value="0"{% if not GUNTER_ORGCHART_GOODBYE %} checked="checked"{% endif %}> {{ lang('NO') }}</label>
-            </dd>
-        </dl>
-
         <!-- Select multiple grupuri -->
         <dl>
             <dt><label for="gunter_orgchart_groups">{{ lang('SELECT_GROUPS') ~ lang('COLON') }}</label></dt>

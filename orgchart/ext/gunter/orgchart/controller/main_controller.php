@@ -36,8 +36,6 @@ class main_controller
 
     public function handle($name)
     {
-        $l_message = !$this->config['gunter_orgchart_goodbye'] ? 'ORGCHART_HELLO' : 'ORGCHART_GOODBYE';
-        $this->template->assign_var('ORGCHART_MESSAGE', $this->language->lang($l_message, $name));
         $saved_groups = [];
 
         if (!empty($this->config['gunter_orgchart_groups'])) {
