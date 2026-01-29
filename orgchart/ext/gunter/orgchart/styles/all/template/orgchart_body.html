@@ -1,0 +1,578 @@
+{% include 'overall_header.html' %}
+
+<h2>{{ ORGCHART_MESSAGE }}</h2>
+
+<div class="page-box">
+
+  <div class="orgchart-wrapper" id="orgchartWrapper">
+    <div class="orgchart-container" id="orgchart">
+      <svg class="orgchart-svg" id="orgchartLines"></svg>
+    </div>
+  </div>
+
+</div>
+
+<!-- IMAGE MODAL -->
+<div class="modal-overlay" id="modalImg">
+  <div class="modal">
+    <h3>Edit Image URL</h3>
+    <input id="modalImgInput">
+    <div class="modal-buttons">
+      <button class="cancel-btn" id="imgCancel">Cancel</button>
+      <button class="save-btn" id="imgSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- NODE MODAL -->
+<div class="modal-overlay" id="modalNode">
+  <div class="modal">
+    <h3>Edit Node</h3>
+
+    <select id="nodeRank">
+      <option>Police Officer</option>
+      <option>Sergeant</option>
+      <option>Lieutenant</option>
+      <option>Captain</option>
+      <option>Commander</option>
+      <option>Deputy Chief</option>
+      <option>Chief of Police</option>
+      <option>Commissioner</option>
+    </select>
+
+    <input id="nodeDept" placeholder="Department">
+    <input id="nodeTitle" placeholder="Title">
+    <input id="nodeName" placeholder="Name">
+
+    <div class="modal-buttons">
+      <button class="cancel-btn" id="nodeCancel">Cancel</button>
+      <button class="save-btn" id="nodeSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* --- Include aici tot CSS-ul tău existent --- */
+  .page-box {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    /* background: #f2f2f2; */
+  }
+
+  /* ===== WRAPPER CU SCROLL ===== */
+  .orgchart-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: #e6e6e6;
+    border: 2px solid #aaa;
+    position: relative;
+  }
+
+  /* ===== CONTINUT ORGANIGRAMA ===== */
+  .orgchart-container {
+    position: relative;
+    padding: 40px;
+    width: max-content;
+    height: auto;
+  }
+
+  .orgchart-node {
+    width: 250px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    background: white;
+    position: relative;
+  }
+
+  .orgchart-node-head-rank {
+    text-align: center;
+    border-bottom: 2px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 25px;
+  }
+
+  .orgchart-node-head-rank-img {
+    height: 20px;
+  }
+
+  .orgchart-node-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px;
+  }
+
+  .orgchart-node-department,
+  .orgchart-node-title {
+    font-weight: bold;
+  }
+
+  .orgchart-node-picture-img {
+    height: 70px;
+    object-fit: cover;
+  }
+
+  .orgchart-root {
+    display: flex;
+    justify-content: flex-start;
+    width: max-content;
+  }
+
+  .orgchart-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .orgchart-children {
+    display: flex;
+    gap: 40px;
+    margin-top: 40px;
+    width: max-content;
+  }
+
+  .orgchart-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  .orgchart-node-picture {
+    position: relative;
+  }
+
+  .orgchart-img-actions {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: 0.2s;
+  }
+
+  .orgchart-node-picture:hover .orgchart-img-actions {
+    opacity: 1;
+  }
+
+  .orgchart-img-btn,
+  .orgchart-node-btn {
+    width: 22px;
+    height: 22px;
+    border: none;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 2px;
+  }
+
+  .orgchart-img-btn img,
+  .orgchart-node-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .orgchart-node-actions {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: 0.2s;
+  }
+
+  .orgchart-node:hover .orgchart-node-actions {
+    opacity: 1;
+  }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+
+  .modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+  }
+
+  .modal h3 {
+    margin-top: 0;
+    font-size: 16px;
+    color: #00255D;
+  }
+
+  .modal input,
+  .modal select {
+    width: 100%;
+    padding: 6px;
+    margin: 10px 0;
+  }
+
+  .modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .modal-buttons button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .save-btn {
+    background: #00255D;
+    color: white;
+  }
+
+  .cancel-btn {
+    background: #ccc;
+  }
+
+  .orgchart-empty {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .orgchart-empty button {
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background: #00255D;
+    color: white;
+  }
+</style>
+
+<script>
+  const EDIT_RIGHTS = {{ ORGCHART_EDIT_PERMISSION| json_encode | raw }};
+  const API_ADD = '{{ path("gunter_orgchart_add") }}';
+  const API_EDIT = '{{ path("gunter_orgchart_edit") }}';
+  const API_DELETE = '{{ path("gunter_orgchart_delete") }}';
+
+
+  let nodes = {{ ORGCHART_NODES| raw }}, map = {}, container, svg, wrapper;
+  let editNodeId = null, editImgNodeId = null;
+
+  const ASSET_PATH = '{{ T_THEME_PATH }}/images/orgchart/';
+
+  const rankMap = {
+    "Police Officer": { color: "#0086e5", img: ASSET_PATH + "ranks/police_officer.png" },
+    "Sergeant": { color: "#7e0000", img: ASSET_PATH + "ranks/sergeant.png" },
+    "Lieutenant": { color: "#660000", img: ASSET_PATH + "ranks/lieutenant.png" },
+    "Captain": { color: "#55FF55", img: ASSET_PATH + "ranks/captain.png" },
+    "Commander": { color: "#00FF00", img: ASSET_PATH + "ranks/commander.png" },
+    "Deputy Chief": { color: "#00AEEF", img: ASSET_PATH + "ranks/deputy_chief.png" },
+    "Chief of Police": { color: "#00255D", img: ASSET_PATH + "ranks/chief.png" },
+    "Commissioner": { color: "#C53895", img: ASSET_PATH + "ranks/commissioner.png" }
+  };
+
+  // Butoane edit/delete
+  const ICON_EDIT = 'edit.png';
+  const ICON_ADD = 'add.png';
+  const ICON_DELETE = 'delete.png';
+
+  container = document.getElementById("orgchart");
+  wrapper = document.getElementById("orgchartWrapper");
+  svg = document.getElementById("orgchartLines");
+
+  renderOrgChart();
+  window.addEventListener("resize", drawLines);
+  wrapper.addEventListener("scroll", drawLines);
+
+  function renderOrgChart() {
+    container.innerHTML = '<svg class="orgchart-svg" id="orgchartLines"></svg>';
+    svg = container.querySelector("svg");
+    map = {};
+
+    nodes.forEach(n => map[n.id] = { ...n, children: [], el: null });
+
+    if (!nodes.length && EDIT_RIGHTS) {
+      const empty = document.createElement("div");
+      empty.className = "orgchart-empty";
+      empty.innerHTML = `<button id="addRootBtn">Adaugă node</button>`;
+      container.appendChild(empty);
+
+      document.getElementById("addRootBtn").onclick = () => addRootNode();
+      return;
+    }
+
+    const roots = [];
+    nodes.forEach(n => {
+      if (n.parentId == null) roots.push(map[n.id]);
+      else map[n.parentId]?.children.push(map[n.id]);
+    });
+
+    const rootWrap = document.createElement("div");
+    rootWrap.className = "orgchart-root";
+    roots.forEach(r => renderBranch(r, rootWrap));
+    container.appendChild(rootWrap);
+
+    // setTimeout(drawLines, 50);
+    requestAnimationFrame(drawLines);
+  }
+
+  function renderBranch(node, parent) {
+    const b = document.createElement("div");
+    b.className = "orgchart-branch";
+    b.appendChild(createNodeEl(node));
+
+    if (node.children.length) {
+      const c = document.createElement("div");
+      c.className = "orgchart-children";
+      node.children.forEach(x => renderBranch(x, c));
+      b.appendChild(c);
+    }
+    parent.appendChild(b);
+  }
+
+  function createNodeEl(node) {
+    const el = document.createElement("div");
+    el.className = "orgchart-node";
+
+    const rank = rankMap[node.rank] || {};
+
+    const actionsHtml = EDIT_RIGHTS ?
+      '<div class="orgchart-node-actions">' +
+      '<button class="orgchart-node-btn edit"><img src="' + ASSET_PATH + ICON_EDIT + '"></button>' +
+      '<button class="orgchart-node-btn add"><img src="' + ASSET_PATH + ICON_ADD + '"></button>' +
+      '<button class="orgchart-node-btn del"><img src="' + ASSET_PATH + ICON_DELETE + '"></button>' +
+      '</div>'
+      : '';
+
+    const imgActionsHtml = EDIT_RIGHTS ?
+      '<div class="orgchart-img-actions">' +
+      '<button class="orgchart-img-btn img-edit"><img src="' + ASSET_PATH + ICON_EDIT + '"></button>' +
+      '<button class="orgchart-img-btn img-del"><img src="' + ASSET_PATH + ICON_DELETE + '"></button>' +
+      '</div>'
+      : '';
+
+    el.innerHTML =
+      '<div class="orgchart-node-head-rank" style="background:' + (rank.color || '#00255D') + '">' +
+      '<img class="orgchart-node-head-rank-img" src="' + (rank.img || node.rankImg) + '">' +
+      '</div>' +
+
+      actionsHtml +
+
+      '<div class="orgchart-node-content">' +
+      '<div class="orgchart-node-picture">' +
+      '<img class="orgchart-node-picture-img" src="' + (node.pictureImg || "{{ T_THEME_PATH }}/images/orgchart/avatar_placeholder.png") + '">' +
+      imgActionsHtml +
+      '</div>' +
+      '<div>' +
+      '<div class="orgchart-node-department">' + node.department + '</div>' +
+      '<div class="orgchart-node-title">' + node.title + '</div>' +
+      '<div class="orgchart-node-name">' + node.name + '</div>' +
+      '</div>' +
+      '</div>';
+
+    // === Evenimente doar dacă există butoanele (EDIT_RIGHTS = true) ===
+
+    const editBtn = el.querySelector(".edit");
+    if (editBtn) editBtn.onclick = e => { e.stopPropagation(); openNodeModal(node.id); };
+
+    const addBtn = el.querySelector(".add");
+    if (addBtn) addBtn.onclick = e => { e.stopPropagation(); addChild(node.id); };
+
+    const delBtn = el.querySelector(".del");
+    if (delBtn) delBtn.onclick = e => { e.stopPropagation(); deleteNode(node.id); };
+
+    const imgEditBtn = el.querySelector(".img-edit");
+    if (imgEditBtn) imgEditBtn.onclick = e => { e.stopPropagation(); openImgModal(node.id); };
+
+    const imgDelBtn = el.querySelector(".img-del");
+    if (imgDelBtn) imgDelBtn.onclick = e => {
+      e.stopPropagation();
+      const n = nodes.find(x => x.id === node.id);
+      n.pictureImg = ASSET_PATH + "avatar_placeholder.png";
+      renderOrgChart();
+    };
+
+    node.el = el;
+    return el;
+  }
+
+
+  function drawLines() {
+    svg.innerHTML = "";
+
+    const wrapRect = wrapper.getBoundingClientRect();
+
+    svg.setAttribute("width", container.scrollWidth);
+    svg.setAttribute("height", container.scrollHeight);
+
+    nodes.forEach(n => {
+      if (n.parentId == null) return;
+
+      const p = map[n.parentId].el.getBoundingClientRect();
+      const c = map[n.id].el.getBoundingClientRect();
+
+      const x1 = p.left + p.width / 2 - wrapRect.left + wrapper.scrollLeft;
+      const y1 = p.bottom - wrapRect.top;
+      const x2 = c.left + c.width / 2 - wrapRect.left + wrapper.scrollLeft;
+      const y2 = c.top - wrapRect.top;
+      const mid = y1 + (y2 - y1) / 2;
+
+      const poly = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+      poly.setAttribute(
+        "points",
+        x1 + "," + y1 + " " +
+        x1 + "," + mid + " " +
+        x2 + "," + mid + " " +
+        x2 + "," + y2
+      );
+      poly.setAttribute("fill", "none");
+      poly.setAttribute("stroke", "#555");
+      poly.setAttribute("stroke-width", "2");
+      svg.appendChild(poly);
+    });
+  }
+
+  async function addChild(pid) {
+    const payload = {
+      parentId: pid,
+      department: "New Department",
+      title: "Officer",
+      name: "New Person",
+      rank: "Police Officer",
+      rankImg: "",
+      pictureImg: ASSET_PATH + "avatar_placeholder.png"
+    };
+
+    const r = await fetch(API_ADD, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const j = await r.json();
+    payload.id = j.id;
+
+    nodes.push(payload);
+    renderOrgChart();
+  }
+
+  async function addRootNode() {
+    const payload = {
+      parentId: null,
+      department: "New Department",
+      title: "Officer",
+      name: "New Person",
+      rank: "Police Officer",
+      rankImg: "",
+      pictureImg: ASSET_PATH + "avatar_placeholder.png"
+    };
+
+    const r = await fetch(API_ADD, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const j = await r.json();
+    payload.id = j.id;
+
+    nodes.push(payload);
+    renderOrgChart();
+  }
+
+  async function deleteNode(id) {
+    if (!confirm("Delete this node and children?")) return;
+    const del = new Set();
+    (function rec(x) {
+      del.add(x);
+      nodes.filter(n => n.parentId === x).forEach(n => rec(n.id));
+    })(id);
+    await fetch(API_DELETE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id })
+    });
+
+    nodes = nodes.filter(n => !del.has(n.id));
+    renderOrgChart();
+  }
+
+  const modalNode = document.getElementById("modalNode");
+  const nodeRank = document.getElementById("nodeRank");
+  const nodeDept = document.getElementById("nodeDept");
+  const nodeTitle = document.getElementById("nodeTitle");
+  const nodeName = document.getElementById("nodeName");
+
+  function openNodeModal(id) {
+    editNodeId = id;
+    const n = nodes.find(x => x.id === id);
+    nodeRank.value = n.rank;
+    nodeDept.value = n.department;
+    nodeTitle.value = n.title;
+    nodeName.value = n.name;
+    modalNode.style.display = "flex";
+  }
+
+  nodeSave.onclick = async () => {
+    const n = nodes.find(x => x.id === editNodeId);
+    n.rank = nodeRank.value;
+    n.department = nodeDept.value;
+    n.title = nodeTitle.value;
+    n.name = nodeName.value;
+    await fetch(API_EDIT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(n)
+    });
+
+    modalNode.style.display = "none";
+    renderOrgChart();
+  };
+
+  nodeCancel.onclick = () => modalNode.style.display = "none";
+
+  const modalImg = document.getElementById("modalImg");
+  const modalImgInput = document.getElementById("modalImgInput");
+
+  function openImgModal(id) {
+    editImgNodeId = id;
+    const n = nodes.find(x => x.id === id);
+    modalImgInput.value = n.pictureImg;
+    modalImg.style.display = "flex";
+  }
+
+  imgSave.onclick = async () => {
+    const n = nodes.find(x => x.id === editImgNodeId);
+    n.pictureImg = modalImgInput.value;
+
+    await fetch(API_EDIT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(n)
+    });
+
+    modalImg.style.display = "none";
+    renderOrgChart();
+  };
+
+
+  imgCancel.onclick = () => modalImg.style.display = "none";
+</script>
+
+{% include 'overall_footer.html' %}

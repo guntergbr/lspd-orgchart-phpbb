@@ -1,0 +1,15 @@
+gunter_orgchart_add:
+    path: /orgchart/add
+    defaults: { _controller: gunter.orgchart.controller.main:add_node }
+
+gunter_orgchart_edit:
+    path: /orgchart/edit
+    defaults: { _controller: gunter.orgchart.controller.main:edit_node }
+
+gunter_orgchart_delete:
+    path: /orgchart/delete
+    defaults: { _controller: gunter.orgchart.controller.main:delete_node }
+
+gunter_orgchart_controller:
+    path: /orgchart/{name}
+    defaults: { _controller: gunter.orgchart.controller.main:handle }
