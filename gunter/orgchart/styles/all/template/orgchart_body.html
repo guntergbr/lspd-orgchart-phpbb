@@ -58,13 +58,13 @@
   const API_ADD = '{{ path("gunter_orgchart_add") }}';
   const API_EDIT = '{{ path("gunter_orgchart_edit") }}';
   const API_DELETE = '{{ path("gunter_orgchart_delete") }}';
+  
+  // const ASSET_PATH = '{{ T_THEME_PATH }}/images/orgchart/';
+  const ASSET_PATH = '{{ ROOT_PATH }}/ext/gunter/orgchart/styles/all/theme/images/orgchart/';
 
 
   let nodes = {{ ORGCHART_NODES| raw }}, map = {}, container, svg, wrapper;
   let editNodeId = null, editImgNodeId = null;
-
-  // const ASSET_PATH = '{{ T_THEME_PATH }}/images/orgchart/';
-  const ASSET_PATH = '{{ ROOT_PATH }}/ext/gunter/orgchart/styles/all/theme/images/orgchart/';
 
   const rankMap = {
     "Police Officer": { color: "#0086e5", img: ASSET_PATH + "ranks/police_officer.png" },
