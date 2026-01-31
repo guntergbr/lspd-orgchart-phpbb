@@ -1,0 +1,2 @@
+parameters:
+    gunter.orgchart.tables.orgchart_nodes: '%core.table_prefix%orgchart_nodes'

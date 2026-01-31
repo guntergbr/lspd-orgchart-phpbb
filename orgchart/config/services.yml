@@ -1,0 +1,40 @@
+imports:
+    - { resource: parameters.yml }
+
+services:
+    gunter.orgchart.controller.main:
+        class: gunter\orgchart\controller\main_controller
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@template'
+            - '@language'
+            - '@user'
+            - '@dbal.conn'
+            - '@auth'
+            - '%gunter.orgchart.tables.orgchart_nodes%'
+        tags:
+            - { name: controller.service_arguments }
+
+    gunter.orgchart.controller.acp:
+        class: gunter\orgchart\controller\acp_controller
+        arguments:
+            - '@config'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@dbal.conn'
+        tags:
+            - { name: controller.service_arguments }
+
+    gunter.orgchart.listener:
+        class: gunter\orgchart\event\main_listener
+        arguments:
+            - '@language'
+            - '@controller.helper'
+            - '@template'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }

@@ -1,0 +1,43 @@
+{% include 'overall_header.html' %}
+
+<h1>{{ lang('ACP_ORGCHART_TITLE') }}</h1>
+
+{% if S_ERROR %}
+    <div class="errorbox">
+        <h3>{{ lang('WARNING') }}</h3>
+        <p>{{ ERROR_MSG }}</p>
+    </div>
+{% endif %}
+
+<form id="gunter_orgchart_acp" name="gunter_orgchart_acp" method="post" action="{{ U_ACTION }}">
+
+    <fieldset>
+        <legend>{{ lang('SETTINGS') }}</legend>
+
+        <!-- Select multiple grupuri -->
+        <dl>
+            <dt><label for="gunter_orgchart_groups">{{ lang('SELECT_GROUPS') ~ lang('COLON') }}</label></dt>
+            <dd>
+                <select name="gunter_orgchart_groups[]" id="gunter_orgchart_groups" multiple="multiple" size="10">
+                    {% for group in GROUPS %}
+                        <option value="{{ group.GROUP_ID }}"
+                        {% if group.GROUP_ID in SELECTED_GROUPS %} selected="selected"{% endif %}>
+                            {{ group.GROUP_NAME }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <p>{{ lang('SELECT_GROUPS_EXPLAIN') }}</p>
+            </dd>
+        </dl>
+
+    </fieldset>
+
+    <fieldset class="submit-buttons">
+        <input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}">&nbsp;
+        <input class="button2" type="submit" id="preview" name="preview" value="{{ lang('PREVIEW') }}">
+        {{ S_FORM_TOKEN }}
+    </fieldset>
+
+</form>
+
+{% include 'overall_footer.html' %}
