@@ -142,9 +142,6 @@ class acp_controller
         ]);
     }
 
-
-
-
     /**
      * Set custom form action.
      *

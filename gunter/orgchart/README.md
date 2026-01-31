@@ -1,6 +1,6 @@
 # Organizational Chart
 
-This is a basic skeleton to help you start building a phpBB extension. Customise it as needed.
+A phpBB extension for creating and displaying organizational charts. Allows administrators to visually present team structure and role hierarchy within the community.
 
 ## Installation
 

@@ -38,6 +38,7 @@ class main_controller
     {
         $saved_groups = [];
 
+        // Get saved groups from config
         if (!empty($this->config['gunter_orgchart_groups'])) {
             $tmp = @unserialize($this->config['gunter_orgchart_groups']);
             if (is_array($tmp)) {
@@ -45,24 +46,35 @@ class main_controller
             }
         }
 
+        // Get org chart nodes
         $nodes = $this->getOrgChartNodes();
 
+        // Check edit permission
         $editPermission = $this->hasEditPermission($saved_groups);
 
+        // Add form key
         add_form_key('form');
 
+        // Assign variables to template
         $this->template->assign_vars([
             'ORGCHART_NODES' => json_encode($nodes, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'ORGCHART_EDIT_PERMISSION' => $editPermission,
         ]);
 
+        // Render template
         return $this->helper->render('@gunter_orgchart/orgchart_body.html', $name);
     }
 
+    /**
+     * Summary of get_user_groups
+     * @return array
+     */
     protected function get_user_groups()
     {
+        // Get user ID
         $user_id = (int) $this->user->data['user_id'];
 
+        // Query to get user groups
         $sql = 'SELECT g.group_id, g.group_name
         FROM ' . USER_GROUP_TABLE . ' ug
         JOIN ' . GROUPS_TABLE . ' g
@@ -70,22 +82,32 @@ class main_controller
         WHERE ug.user_id = ' . (int) $user_id . '
           AND ug.user_pending = 0';
 
+        // Execute query
         $result = $this->db->sql_query($sql);
 
+        // Fetch groups
         $groups = [];
 
         while ($row = $this->db->sql_fetchrow($result)) {
             $groups[] = $row; // id + name
         }
 
+        // Free result
         $this->db->sql_freeresult($result);
         return $groups;
     }
 
+    /**
+     * Summary of user_in_group
+     * @param mixed $group_id
+     * @return bool
+     */
     protected function user_in_group($group_id)
     {
+        // Get user groups
         $groups = $this->get_user_groups();
 
+        // Check if user is in the specified group
         foreach ($groups as $g) {
             if ((int) $g['group_id'] === (int) $group_id) {
                 return true;
@@ -95,8 +117,19 @@ class main_controller
         return false;
     }
 
+    /**
+     * Summary of hasEditPermission
+     * @param array $saved_groups
+     * @return bool
+     */
     function hasEditPermission(array $saved_groups)
     {
+        // If no groups are set, no one has edit permission
+        if (empty($saved_groups)) {
+            return false;
+        }
+
+        // Check if user is in any of the saved groups
         $editPermission = false;
 
         foreach ($saved_groups as $group_id) {
@@ -109,8 +142,13 @@ class main_controller
         return $editPermission;
     }
 
+    /**
+     * Summary of getOrgChartNodes
+     * @return array
+     */
     function getOrgChartNodes()
     {
+        // Fetch all nodes from the org chart table
         $nodes = [];
 
         $sql = 'SELECT
@@ -122,11 +160,12 @@ class main_controller
         name,
         rank_img,
         picture_img
-    FROM ' . $this->orgchart_table . '
-    ORDER BY id ASC';
+        FROM ' . $this->orgchart_table . '
+        ORDER BY id ASC';
 
         $result = $this->db->sql_query($sql);
 
+        // Build nodes array
         while ($row = $this->db->sql_fetchrow($result)) {
             $nodes[] = [
                 'id' => (int) $row['id'],
@@ -145,11 +184,16 @@ class main_controller
         return $nodes;
     }
 
-
+    /**
+     * Summary of add_node
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
     public function add_node()
     {
+        // Get data from request
         $data = json_decode(file_get_contents('php://input'), true);
 
+        // Insert new node into database
         $sql = 'INSERT INTO ' . $this->orgchart_table . ' ' .
             $this->db->sql_build_array('INSERT', [
                 'parent_id' => $data['parentId'] !== null ? (int) $data['parentId'] : null,
@@ -169,10 +213,16 @@ class main_controller
         ]);
     }
 
+    /**
+     * Summary of edit_node
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
     public function edit_node()
     {
+        // Get data from request
         $data = json_decode(file_get_contents('php://input'), true);
 
+        // Update node in database
         $sql = 'UPDATE ' . $this->orgchart_table . '
             SET ' . $this->db->sql_build_array('UPDATE', [
                         'department' => $data['department'],
@@ -189,13 +239,19 @@ class main_controller
         return new \Symfony\Component\HttpFoundation\JsonResponse(['ok' => true]);
     }
 
+    /**
+     * Summary of delete_node
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
     public function delete_node()
     {
+        // Get data from request
         $data = json_decode(file_get_contents('php://input'), true);
         $id = (int) $data['id'];
 
         $to_delete = [$id];
 
+        // Find all child nodes recursively
         for ($i = 0; $i < count($to_delete); $i++) {
             $pid = $to_delete[$i];
 
@@ -209,6 +265,7 @@ class main_controller
             $this->db->sql_freeresult($result);
         }
 
+        // Delete all nodes in $to_delete
         $sql = 'DELETE FROM ' . $this->orgchart_table . '
             WHERE ' . $this->db->sql_in_set('id', $to_delete);
 

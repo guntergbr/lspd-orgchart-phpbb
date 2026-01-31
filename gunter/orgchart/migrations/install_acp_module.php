@@ -25,7 +25,6 @@ class install_acp_module extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return [
-			['config.add', ['gunter_orgchart_goodbye', 0]],
 			['config.add', ['gunter_orgchart_groups', 'a:0:{}']],
 
 			['module.add', [

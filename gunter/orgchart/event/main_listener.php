@@ -84,7 +84,7 @@ class main_listener implements EventSubscriberInterface
 	public function add_page_header_link()
 	{
 		$this->template->assign_vars([
-			'U_ORGCHART_PAGE'	=> $this->helper->route('gunter_orgchart_controller', ['name' => 'world']),
+			'U_ORGCHART_PAGE'	=> $this->helper->route('gunter_orgchart_controller', ['name' => 'index']),
 		]);
 	}
 
@@ -95,10 +95,10 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function viewonline_page($event)
 	{
-		if ($event['on_page'][1] === 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/demo') === 0)
+		if ($event['on_page'][1] === 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/orgchart') === 0)
 		{
 			$event['location'] = $this->language->lang('VIEWING_GUNTER_ORGCHART');
-			$event['location_url'] = $this->helper->route('gunter_orgchart_controller', ['name' => 'world']);
+			$event['location_url'] = $this->helper->route('gunter_orgchart_controller', ['name' => 'index']);
 		}
 	}
 
