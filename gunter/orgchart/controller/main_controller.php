@@ -212,7 +212,7 @@ class main_controller
         $this->db->sql_query($sql);
         $id = (int) $this->db->sql_nextid();
 
-        $this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_ORGCHART_NODE_ADDED', time());
+        $this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_MOD_ORGCHART_NODE_ADDED', time());
 
         return new \Symfony\Component\HttpFoundation\JsonResponse([
             'id' => $id
@@ -242,7 +242,7 @@ class main_controller
 
         $this->db->sql_query($sql);
 
-        $this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_ORGCHART_NODE_EDITED', time(), [
+        $this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_MOD_ORGCHART_NODE_EDITED', time(), [
             (int) $data['id'],
             $data['name'],
             $data['department'],
@@ -285,7 +285,7 @@ class main_controller
 
         $this->db->sql_query($sql);
 
-        $this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_ORGCHART_NODE_DELETED', time(), [(int) $id]);
+        $this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_MOD_ORGCHART_NODE_DELETED', time(), [(int) $id]);
 
         return new \Symfony\Component\HttpFoundation\JsonResponse(['ok' => true]);
     }
