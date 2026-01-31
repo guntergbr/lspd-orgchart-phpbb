@@ -21,8 +21,9 @@ class main_controller
     protected $auth;
     protected $db;
     protected $orgchart_table;
+    protected $log;
 
-    public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\language\language $language, \phpbb\user $user, \phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, $orgchart_table)
+    public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\language\language $language, \phpbb\user $user, \phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, $orgchart_table, \phpbb\log\log $log)
     {
         $this->config = $config;
         $this->helper = $helper;
@@ -32,6 +33,7 @@ class main_controller
         $this->db = $db;
         $this->auth = $auth;
         $this->orgchart_table = $orgchart_table;
+        $this->log = $log;
     }
 
     public function handle($name)
@@ -60,7 +62,7 @@ class main_controller
             'ORGCHART_NODES' => json_encode($nodes, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'ORGCHART_EDIT_PERMISSION' => $editPermission,
             'ORGCHART_CHIEF_NAME' => $this->config['gunter_orgchart_chief_name'] ?? 'VACANT',
-            'ORGCHART_DP_DATE' => $this->config['gunter_orgchart_dp_date' ] ?? 'Unknown DP',
+            'ORGCHART_DP_DATE' => $this->config['gunter_orgchart_dp_date'] ?? 'Unknown DP',
         ]);
 
         // Render template
@@ -210,6 +212,8 @@ class main_controller
         $this->db->sql_query($sql);
         $id = (int) $this->db->sql_nextid();
 
+        $this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_ORGCHART_NODE_ADDED', time());
+
         return new \Symfony\Component\HttpFoundation\JsonResponse([
             'id' => $id
         ]);
@@ -237,6 +241,14 @@ class main_controller
             WHERE id = ' . (int) $data['id'];
 
         $this->db->sql_query($sql);
+
+        $this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_ORGCHART_NODE_EDITED', time(), [
+            (int) $data['id'],
+            $data['name'],
+            $data['department'],
+            $data['title'],
+            $data['rank'],
+        ]);
 
         return new \Symfony\Component\HttpFoundation\JsonResponse(['ok' => true]);
     }
@@ -272,6 +284,8 @@ class main_controller
             WHERE ' . $this->db->sql_in_set('id', $to_delete);
 
         $this->db->sql_query($sql);
+
+        $this->log->add('mod', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_ORGCHART_NODE_DELETED', time(), [(int) $id]);
 
         return new \Symfony\Component\HttpFoundation\JsonResponse(['ok' => true]);
     }

@@ -51,4 +51,8 @@ $lang = array_merge($lang, [
 
 	'DP_DATE' => 'Department Date',
 	'DP_DATE_EXPLAIN' => 'Enter the date of the department to be displayed on the organizational chart.',
+
+	'LOG_ACP_ORGCHART_NODE_ADDED'	=>	'<strong>Organizational Chart node added</strong>',
+	'LOG_ACP_ORGCHART_NODE_EDITED'	=>	'<strong>Organizational Chart node edited</strong><br />Node ID: %1$d<br />Name: %2$s<br />Department: %3$s<br />Title: %4$s<br />Rank: %5$s',
+	'LOG_ACP_ORGCHART_NODE_DELETED'	=>	'<strong>Organizational Chart node deleted</strong><br />Node ID: %s',
 ]);

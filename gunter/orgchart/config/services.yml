@@ -13,6 +13,7 @@ services:
             - '@dbal.conn'
             - '@auth'
             - '%gunter.orgchart.tables.orgchart_nodes%'
+            - '@log'
         tags:
             - { name: controller.service_arguments }
 
