@@ -46,4 +46,9 @@ $lang = array_merge($lang, [
 	'SELECT_GROUPS' => 'Select Groups',
 	'SELECT_GROUPS_EXPLAIN' => 'Choose one or more groups for the Org Chart.',
 
+	'CHIEF_NAME' => 'Chief Name',
+	'CHIEF_NAME_EXPLAIN' => 'Enter the name of the chief to be displayed at the top of the organizational chart.',
+
+	'DP_DATE' => 'Department Date',
+	'DP_DATE_EXPLAIN' => 'Enter the date of the department to be displayed on the organizational chart.',
 ]);

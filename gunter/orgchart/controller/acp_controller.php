@@ -102,6 +102,14 @@ class acp_controller
             }
 
             if (empty($errors)) {
+                // Save chief name
+                $chief_name = $this->request->variable('gunter_orgchart_chief_name', '', true);
+                $this->config->set('gunter_orgchart_chief_name', trim($chief_name) ?: 'VACANT');
+
+                // Save department date
+                $dp_date = $this->request->variable('gunter_orgchart_dp_date', '', true);
+                $this->config->set('gunter_orgchart_dp_date', trim($dp_date) ?: 'Unknown DP');
+
                 // Save the selected groups (force integer and serialize)
                 $selected_groups = array_map(
                     'intval',
@@ -125,7 +133,7 @@ class acp_controller
                 }
 
                 // Log admin action with group names
-                $this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_ORGCHART_SETTINGS', time(), [implode(', ', $group_names)]);
+                $this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_ORGCHART_SETTINGS', time(), [$this->config['gunter_orgchart_chief_name'], $this->config['gunter_orgchart_dp_date'], implode(', ', $group_names)]);
 
                 // Confirm save and redirect
                 trigger_error($this->language->lang('ACP_ORGCHART_SETTING_SAVED') . adm_back_link($this->u_action));
@@ -139,6 +147,8 @@ class acp_controller
             'U_ACTION' => $this->u_action,
             'GROUPS' => $groups,
             'SELECTED_GROUPS' => $saved_groups,
+            'ORGCHART_CHIEF_NAME' => $this->config['gunter_orgchart_chief_name'],
+            'ORGCHART_DP_DATE' => $this->config['gunter_orgchart_dp_date'],
         ]);
     }
 

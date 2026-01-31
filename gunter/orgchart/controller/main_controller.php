@@ -59,6 +59,8 @@ class main_controller
         $this->template->assign_vars([
             'ORGCHART_NODES' => json_encode($nodes, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'ORGCHART_EDIT_PERMISSION' => $editPermission,
+            'ORGCHART_CHIEF_NAME' => $this->config['gunter_orgchart_chief_name'] ?? 'VACANT',
+            'ORGCHART_DP_DATE' => $this->config['gunter_orgchart_dp_date' ] ?? 'Unknown DP',
         ]);
 
         // Render template

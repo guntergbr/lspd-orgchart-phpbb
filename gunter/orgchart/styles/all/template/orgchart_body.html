@@ -1,9 +1,26 @@
 {% include 'overall_header.html' %}
 
+{% INCLUDECSS 'orgchart_header.css' %}
 {% INCLUDECSS 'orgchart_body.css' %}
 
 <div class="page-box">
 
+  <div class="orgchart-header-container">
+    <div class="orgchart-header-city">
+      <img class="orgchart-header-city-img" id="city-img" src="city-image.png" alt="City Image">
+    </div>
+    <div class="orgchart-header-text">
+      <div id="orgchart-header-text-title">LOS SANTOS POLICE DEPARTMENT ORGANIZATION CHART</div>
+      <div id="orgchart-header-text-chief">
+        <div id="chief-name">{{ ORGCHART_CHIEF_NAME|upper }}</div>
+        <div id="chief-of-police">&nbsp;CHIEF OF POLICE</div>
+      </div>
+      <div id="orgchart-header-text-date">As of {{ ORGCHART_DP_DATE }}</div>
+    </div>
+    <div class="orgchart-header-lspd">
+      <img class="orgchart-header-lspd-img" id="lspd-img" src="lspd-image.png" alt="LSPD Image">
+    </div>
+  </div>
   <div class="orgchart-wrapper" id="orgchartWrapper">
     <div class="orgchart-container" id="orgchart">
       <svg class="orgchart-svg" id="orgchartLines"></svg>
@@ -58,9 +75,12 @@
   const API_ADD = '{{ path("gunter_orgchart_add") }}';
   const API_EDIT = '{{ path("gunter_orgchart_edit") }}';
   const API_DELETE = '{{ path("gunter_orgchart_delete") }}';
-  
+
   // const ASSET_PATH = '{{ T_THEME_PATH }}/images/orgchart/';
   const ASSET_PATH = '{{ ROOT_PATH }}/ext/gunter/orgchart/styles/all/theme/images/orgchart/';
+
+  document.getElementById("city-img").src = ASSET_PATH + "city-image.png";
+  document.getElementById("lspd-img").src = ASSET_PATH + "lspd-image.png";
 
 
   let nodes = {{ ORGCHART_NODES| raw }}, map = {}, container, svg, wrapper;
