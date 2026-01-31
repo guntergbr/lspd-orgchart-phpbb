@@ -1,5 +1,7 @@
 {% include 'overall_header.html' %}
 
+{% INCLUDECSS 'orgchart_body.css' %}
+
 <div class="page-box">
 
   <div class="orgchart-wrapper" id="orgchartWrapper">
@@ -28,16 +30,16 @@
     <h3>Edit Node</h3>
 
     <select id="nodeRank">
-      <option>Police Officer</option>
-      <option>Detective</option>
-      <option>Sergeant</option>
-      <option>Lieutenant</option>
-      <option>Captain</option>
-      <option>Commander</option>
-      <option>Deputy Chief</option>
-      <option>Assistant Chief</option>
-      <option>Chief of Police</option>
       <option>Commissioner</option>
+      <option>Chief of Police</option>
+      <option>Assistant Chief</option>
+      <option>Deputy Chief</option>
+      <option>Commander</option>
+      <option>Captain</option>
+      <option>Lieutenant</option>
+      <option>Sergeant</option>
+      <option>Detective</option>
+      <option>Police Officer</option>
     </select>
 
     <input id="nodeDept" placeholder="Department">
@@ -50,221 +52,6 @@
     </div>
   </div>
 </div>
-
-<style>
-  /* --- Include aici tot CSS-ul tău existent --- */
-  .page-box {
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    /* background: #f2f2f2; */
-  }
-
-  /* ===== WRAPPER CU SCROLL ===== */
-  .orgchart-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    /* background: #e6e6e6;
-    border: 2px solid #aaa; */
-    position: relative;
-  }
-
-  /* ===== CONTINUT ORGANIGRAMA ===== */
-  .orgchart-container {
-    position: relative;
-    padding: 40px;
-    width: max-content;
-    height: auto;
-  }
-
-  .orgchart-node {
-    width: 250px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    background: white;
-    position: relative;
-  }
-
-  .orgchart-node-head-rank {
-    text-align: center;
-    border-bottom: 2px solid #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 25px;
-  }
-
-  .orgchart-node-head-rank-img {
-    height: 20px;
-  }
-
-  .orgchart-node-content {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px;
-  }
-
-  .orgchart-node-department,
-  .orgchart-node-title {
-    font-weight: bold;
-  }
-
-  .orgchart-node-picture-img {
-    height: 70px;
-    object-fit: cover;
-  }
-
-  .orgchart-root {
-    display: flex;
-    justify-content: flex-start;
-    width: max-content;
-  }
-
-  .orgchart-branch {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .orgchart-children {
-    display: flex;
-    gap: 40px;
-    margin-top: 40px;
-    width: max-content;
-  }
-
-  .orgchart-svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    overflow: visible;
-  }
-
-  .orgchart-node-picture {
-    position: relative;
-    height: 70px;
-    width: 70px;
-  }
-
-  .orgchart-img-actions {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    display: flex;
-    gap: 4px;
-    opacity: 0;
-    transition: 0.2s;
-  }
-
-  .orgchart-node-picture:hover .orgchart-img-actions {
-    opacity: 1;
-  }
-
-  .orgchart-img-btn,
-  .orgchart-node-btn {
-    width: 22px;
-    height: 22px;
-    border: none;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 2px;
-  }
-
-  .orgchart-img-btn img,
-  .orgchart-node-btn img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  .orgchart-node-actions {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    display: flex;
-    gap: 4px;
-    opacity: 0;
-    transition: 0.2s;
-  }
-
-  .orgchart-node:hover .orgchart-node-actions {
-    opacity: 1;
-  }
-
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-  }
-
-  .modal {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
-  }
-
-  .modal h3 {
-    margin-top: 0;
-    font-size: 16px;
-    color: #00255D;
-  }
-
-  .modal input,
-  .modal select {
-    width: 100%;
-    padding: 6px;
-    margin: 10px 0;
-  }
-
-  .modal-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-
-  .modal-buttons button {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  .save-btn {
-    background: #00255D;
-    color: white;
-  }
-
-  .cancel-btn {
-    background: #ccc;
-  }
-
-  .orgchart-empty {
-    width: 100%;
-    height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .orgchart-empty button {
-    padding: 12px 20px;
-    font-size: 14px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    background: #00255D;
-    color: white;
-  }
-</style>
 
 <script>
   const EDIT_RIGHTS = {{ ORGCHART_EDIT_PERMISSION| json_encode | raw }};
@@ -291,7 +78,7 @@
     "Commissioner": { color: "#C53895", img: ASSET_PATH + "ranks/commissioner.png" }
   };
 
-  // Butoane edit/delete
+  // Action buttons icons
   const ICON_EDIT = 'edit.png';
   const ICON_ADD = 'add.png';
   const ICON_DELETE = 'delete.png';
@@ -379,8 +166,8 @@
       actionsHtml +
 
       '<div class="orgchart-node-content">' +
-      '<div class="orgchart-node-picture">' +
-      '<img class="orgchart-node-picture-img" src="' + (node.pictureImg || ASSET_PATH + "avatar_placeholder.png") + '">' +
+      '<div class="orgchart-node-avatar">' +
+      '<img class="orgchart-node-avatar-img" src="' + (node.avatarImg || ASSET_PATH + "avatar_placeholder.png") + '">' +
       imgActionsHtml +
       '</div>' +
       '<div>' +
@@ -455,7 +242,7 @@
       name: "New Person",
       rank: "Police Officer",
       rankImg: "",
-      pictureImg: ASSET_PATH + "avatar_placeholder.png"
+      avatarImg: ASSET_PATH + "avatar_placeholder.png"
     };
 
     const r = await fetch(API_ADD, {
@@ -479,7 +266,7 @@
       name: "New Person",
       rank: "Police Officer",
       rankImg: "",
-      pictureImg: ASSET_PATH + "avatar_placeholder.png"
+      avatarImg: ASSET_PATH + "avatar_placeholder.png"
     };
 
     const r = await fetch(API_ADD, {
@@ -518,8 +305,8 @@
     const n = nodes.find(x => x.id === id);
     if (!n) return;
 
-    // ștergem din DB
-    n.pictureImg = "";
+    // Delete avatar URL
+    n.avatarImg = "";
 
     await fetch(API_EDIT, {
       method: "POST",
@@ -527,8 +314,8 @@
       body: JSON.stringify(n)
     });
 
-    // placeholder doar pentru UI
-    n.pictureImg = ASSET_PATH + "avatar_placeholder.png";
+    // placeholder image
+    n.avatarImg = ASSET_PATH + "avatar_placeholder.png";
 
     renderOrgChart();
   }
@@ -573,13 +360,13 @@
   function openImgModal(id) {
     editImgNodeId = id;
     const n = nodes.find(x => x.id === id);
-    modalImgInput.value = n.pictureImg;
+    modalImgInput.value = n.avatarImg;
     modalImg.style.display = "flex";
   }
 
   imgSave.onclick = async () => {
     const n = nodes.find(x => x.id === editImgNodeId);
-    n.pictureImg = modalImgInput.value;
+    n.avatarImg = modalImgInput.value;
 
     await fetch(API_EDIT, {
       method: "POST",
