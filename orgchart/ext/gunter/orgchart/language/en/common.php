@@ -40,7 +40,7 @@ $lang = array_merge($lang, [
 	'ACP_ORGCHART_GOODBYE' => 'Should say goodbye?',
 	'ACP_ORGCHART_SETTING_SAVED' => 'Settings have been saved successfully!',
 
-	'ORGCHART_PAGE' => 'Orgchart Page',
+	'ORGCHART_PAGE' => 'Organizational Chart',
 	'VIEWING_GUNTER_ORGCHART' => 'Viewing Organizational Chart page',
 
 	'SELECT_GROUPS' => 'Select Groups',
