@@ -21,6 +21,8 @@
   padding: 40px;
   width: max-content;
   height: auto;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 12px;
 }
 
 .orgchart-node {
