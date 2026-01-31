@@ -110,11 +110,22 @@ class acp_controller
 
                 $this->config->set('gunter_orgchart_groups', serialize($selected_groups));
 
-                // Log debug info
-                $this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'DEBUG: Saved ACP groups: ' . implode(',', $selected_groups));
+                // Get group names for logging
+                $group_names = [];
+                if (!empty($selected_groups)) {
+                    $sql = 'SELECT group_id, group_name 
+                            FROM ' . GROUPS_TABLE . ' 
+                            WHERE ' . $this->db->sql_in_set('group_id', $selected_groups);
+                    $result = $this->db->sql_query($sql);
 
-                // Log admin action
-                $this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_ORGCHART_SETTINGS');
+                    while ($row = $this->db->sql_fetchrow($result)) {
+                        $group_names[] = $this->language->lang($row['group_name']);
+                    }
+                    $this->db->sql_freeresult($result);
+                }
+
+                // Log admin action with group names
+                $this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_ORGCHART_SETTINGS', time(), [implode(', ', $group_names)]);
 
                 // Confirm save and redirect
                 trigger_error($this->language->lang('ACP_ORGCHART_SETTING_SAVED') . adm_back_link($this->u_action));

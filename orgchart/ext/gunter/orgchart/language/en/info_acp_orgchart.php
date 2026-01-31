@@ -38,5 +38,5 @@ $lang = array_merge($lang, [
 	'ACP_ORGCHART_TITLE'	=> 'Organizational Chart Module',
 	'ACP_ORGCHART'			=> 'Organizational Chart Settings',
 
-	'LOG_ACP_ORGCHART_SETTINGS'		=> '<strong>Organizational Chart settings updated</strong>',
+	'LOG_ACP_ORGCHART_SETTINGS'	=>	'<strong>Organizational Chart settings updated</strong><br />Selected groups: %s',
 ]);
